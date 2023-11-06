@@ -255,6 +255,7 @@ class NettyServer implements InternalServer, InternalWithLogId {
         ChannelPromise channelDone = ch.newPromise();
 
         long maxConnectionAgeInNanos = NettyServer.this.maxConnectionAgeInNanos;
+        // 如果链接最长时间没有禁用，随机+/- 10%
         if (maxConnectionAgeInNanos != MAX_CONNECTION_AGE_NANOS_DISABLED) {
           // apply a random jitter of +/-10% to max connection age
           // 将 +-10% 的随机抖动应用到最大连接年龄

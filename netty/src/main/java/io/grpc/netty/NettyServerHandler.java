@@ -107,6 +107,7 @@ import javax.annotation.Nullable;
 /**
  * Server-side Netty handler for GRPC processing. All event handlers are executed entirely within
  * the context of the Netty Channel thread.
+ * 用于 GRPC 处理的服务器端 Netty 处理程序。所有事件处理程序都完全在 Netty Channel 线程的上下文中执行。
  */
 class NettyServerHandler extends AbstractNettyHandler {
   private static final Logger logger = Logger.getLogger(NettyServerHandler.class.getName());

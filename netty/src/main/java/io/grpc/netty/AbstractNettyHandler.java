@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Base class for all Netty gRPC handlers. This class standardizes exception handling (always
  * shutdown the connection) as well as sending the initial connection window at startup.
+ * 所有 Netty gRPC 处理程序的基类。此类标准化异常处理（始终关闭连接）以及在启动时发送初始连接窗口。
  */
 abstract class AbstractNettyHandler extends GrpcHttp2ConnectionHandler {
   private static final long GRACEFUL_SHUTDOWN_NO_TIMEOUT = -1;

@@ -61,7 +61,15 @@ class NettyServerTransport implements ServerTransport {
       "NativeIoException" /* Netty exceptions */);
 
   private final InternalLogId logId;
+
+  /**
+   * 应该是客户端连到服务的channel吧.
+   */
   private final Channel channel;
+
+  /**
+   * channel要结束时会执行的promise.
+   */
   private final ChannelPromise channelUnused;
   private final ProtocolNegotiator protocolNegotiator;
   private final int maxStreams;
@@ -131,6 +139,7 @@ class NettyServerTransport implements ServerTransport {
     this.listener = listener;
 
     // Create the Netty handler for the pipeline.
+    // 为管道创建 Netty 处理程序。
     grpcHandler = createHandler(listener, channelUnused);
 
     // Notify when the channel closes.
@@ -260,6 +269,7 @@ class NettyServerTransport implements ServerTransport {
 
   /**
    * Creates the Netty handler to be used in the channel pipeline.
+   * 创建要在通道管道中使用的 Netty 处理程序。
    */
   private NettyServerHandler createHandler(
       ServerTransportListener transportListener, ChannelPromise channelUnused) {
