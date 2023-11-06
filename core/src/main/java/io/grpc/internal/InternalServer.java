@@ -27,6 +27,8 @@ import javax.annotation.concurrent.ThreadSafe;
 /**
  * An object that accepts new incoming connections on one or more listening socket addresses.
  * This would commonly encapsulate a bound socket that {@code accept()}s new connections.
+ * <br>
+ * 接受一个或多个侦听套接字地址上的新传入连接的对象。这通常会封装 {@code accept()} 的新连接的绑定套接字。
  */
 @ThreadSafe
 public interface InternalServer {
@@ -34,9 +36,12 @@ public interface InternalServer {
    * Starts transport. Implementations must not call {@code listener} until after {@code start()}
    * returns. The method only returns after it has done the equivalent of bind()ing, so it will be
    * able to service any connections created after returning.
+   * <br>
+   * 开始运输。在 {@code start()} 返回之前，实现不得调用 {@code listener}。该方法仅在完成bind()ing的等效功能后返回，
+   * 因此它将能够为返回后创建的任何连接提供服务。
    *
-   * @param listener non-{@code null} listener of server events
-   * @throws IOException if unable to bind
+   * @param listener non-{@code null} listener of server events 服务器事件的非 {@code null} 监听器
+   * @throws IOException if unable to bind 如果无法绑定
    */
   void start(ServerListener listener) throws IOException;
 
@@ -52,22 +57,30 @@ public interface InternalServer {
   /**
    * Returns the first listening socket address.  May change after {@link #start(ServerListener)} is
    * called.
+   * <br>
+   * 返回第一个侦听套接字地址。调用 {@link #start(ServerListener)} 后可能会更改。
    */
   SocketAddress getListenSocketAddress();
 
   /**
    * Returns the first listen socket stats of this server. May return {@code null}.
+   * <br>
+   * 返回该服务器的第一个侦听套接字统计信息。可能返回null。
    */
   @Nullable InternalInstrumented<SocketStats> getListenSocketStats();
 
   /**
    * Returns a list of listening socket addresses.  May change after {@link #start(ServerListener)}
    * is called.
+   * <br>
+   * 返回监听套接字地址列表。调用 {@link #start(ServerListener)} 后可能会更改。
    */
   List<? extends SocketAddress> getListenSocketAddresses();
 
   /**
    * Returns a list of listen socket stats of this server. May return {@code null}.
+   * <br>
+   * 返回此服务器的侦听套接字统计信息列表。可能返回 {@code null}。
    */
   @Nullable List<InternalInstrumented<SocketStats>> getListenSocketStatsList();
 

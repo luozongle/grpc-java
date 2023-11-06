@@ -49,8 +49,14 @@ final class ServiceProviders {
   /**
    * If this is not Android, returns all available implementations discovered via
    * {@link ServiceLoader}.
+   * <br>
+   * 如果这不是Android，则返回通过 {@link ServiceLoader} 发现的所有可用实现。
+   *
+   * <br><br>
    * If this is Android, returns all available implementations in {@code hardcoded}.
    * The list is sorted in descending priority order.
+   * <br>
+   * 如果这是Android，则返回 {@code 硬编码} 中的所有可用实现。列表按优先级降序排序。
    */
   public static <T> List<T> loadAll(
       Class<T> klass,
@@ -88,6 +94,8 @@ final class ServiceProviders {
 
   /**
    * Returns true if the {@link ClassLoader} is for android.
+   * <br>
+   * 如果ClassLoader适用于android，则返回true。
    */
   static boolean isAndroid(ClassLoader cl) {
     try {
@@ -102,6 +110,8 @@ final class ServiceProviders {
 
   /**
    * Loads service providers for the {@code klass} service using {@link ServiceLoader}.
+   * <br>
+   * 使用ServiceLoader加载klass服务的服务提供者。
    */
   @VisibleForTesting
   public static <T> Iterable<T> getCandidatesViaServiceLoader(Class<T> klass, ClassLoader cl) {

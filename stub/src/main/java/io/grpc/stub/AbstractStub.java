@@ -49,7 +49,16 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 @CheckReturnValue
 public abstract class AbstractStub<S extends AbstractStub<S>> {
+
+  /**
+   * channel 暂时没有理解是干嘛的.
+   * newStub的时候设置进来的
+   */
   private final Channel channel;
+
+  /**
+   * newStub的时候设置进来的.
+   */
   private final CallOptions callOptions;
 
   /**

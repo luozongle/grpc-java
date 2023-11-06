@@ -23,18 +23,25 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.handler.codec.ByteToMessageDecoder.Cumulator;
 
+/**
+ * netty累计器.
+ */
 class NettyAdaptiveCumulator implements Cumulator {
   private final int composeMinSize;
 
   /**
    * "Adaptive" cumulator: cumulate {@link ByteBuf}s by dynamically switching between merge and
    * compose strategies.
+   * <br>
+   * “自适应” 累积器: 通过在合并策略和组合策略之间动态切换来累积{@link ByteBuf}。
    *
    * @param composeMinSize Determines the minimal size of the buffer that should be composed (added
    *                       as a new component of the {@link CompositeByteBuf}). If the total size
    *                       of the last component (tail) and the incoming buffer is below this value,
    *                       the incoming buffer is appended to the tail, and the new component is not
    *                       added.
+   *                       确定应组成的缓冲区的最小大小 (作为 {@link CompositeByteBuf} 的新组件添加)。
+   *                       如果最后一个组件 (尾部) 和传入缓冲区的总大小低于此值，则将传入缓冲区附加到尾部，并且不添加新组件。
    */
   NettyAdaptiveCumulator(int composeMinSize) {
     Preconditions.checkArgument(composeMinSize >= 0, "composeMinSize must be non-negative");
@@ -44,27 +51,42 @@ class NettyAdaptiveCumulator implements Cumulator {
   /**
    * "Adaptive" cumulator: cumulate {@link ByteBuf}s by dynamically switching between merge and
    * compose strategies.
+   * <br>
+   * “自适应” 累积器: 通过在合并策略和组合策略之间动态切换来累积 {@link ByteBuf}。
    *
    * <p>This cumulator applies a heuristic to make a decision whether to track a reference to the
    * buffer with bytes received from the network stack in an array ("zero-copy"), or to merge into
    * the last component (the tail) by performing a memory copy.
+   * <br>
+   * 此累积器应用启发式方法来决定是使用从网络堆栈接收到的字节在数组中跟踪对缓冲区的引用 (“零副本”)，还是通过执行内存复制合并到最后一个组件 (尾部)。
    *
    * <p>It is necessary as a protection from a potential attack on the {@link
    * io.netty.handler.codec.ByteToMessageDecoder#COMPOSITE_CUMULATOR}. Consider a pathological case
    * when an attacker sends TCP packages containing a single byte of data, and forcing the cumulator
    * to track each one in a separate buffer. The cost is memory overhead for each buffer, and extra
    * compute to read the cumulation.
+   * <br>
+   * 作为对 {@link io.netty.handler.codec.ByteToMessageDecoder#COMPOSITE_CUMULATOR} 的潜在攻击的保护，这是必要的。
+   * 考虑一种病态情况，即攻击者发送包含单个数据字节的TCP包，并迫使累积器在单独的缓冲区中跟踪每个包。
+   * 成本是每个缓冲区的内存开销，以及读取累积的额外计算。
    *
    * <p>Implemented heuristic establishes a minimal threshold for the total size of the tail and
    * incoming buffer, below which they are merged. The sum of the tail and the incoming buffer is
    * used to avoid a case where attacker alternates the size of data packets to trick the cumulator
    * into always selecting compose strategy.
+   * <br>
+   * 实现的启发式方法为尾部和传入缓冲区的总大小建立了一个最小阈值，在该阈值以下将它们合并。
+   * 尾部和传入缓冲区的总和用于避免攻击者交替使用数据包的大小以欺骗累积器始终选择compose策略的情况。
    *
    * <p>Merging strategy attempts to minimize unnecessary memory writes. When possible, it expands
    * the tail capacity and only copies the incoming buffer into available memory. Otherwise, when
    * both tail and the buffer must be copied, the tail is reallocated (or fully replaced) with a new
    * buffer of exponentially increasing capacity (bounded to {@link #composeMinSize}) to ensure
    * runtime {@code O(n^2)} is amortized to {@code O(n)}.
+   * <br>
+   * 合并策略试图最小化不必要的内存写入。在可能的情况下，它会扩展尾部容量，并且仅将传入的缓冲区复制到可用内存中。
+   * 否则，当尾和缓冲区都必须被复制时，尾部被重新分配 (或完全替换) 一个新的容量指数增加的缓冲区
+   * (限制为{@link #composeMinSize})，以确保运行时 {@code O(n^2)} 被摊销为  {@code O(n)}。
    */
   @Override
   @SuppressWarnings("ReferenceEquality")

@@ -106,6 +106,10 @@ public final class ManagedChannelImplBuilder
 
   ObjectPool<? extends Executor> executorPool = DEFAULT_EXECUTOR_POOL;
 
+  /**
+   * 这是啥.
+   * 卸载线程池pool？
+   */
   ObjectPool<? extends Executor> offloadExecutorPool = DEFAULT_EXECUTOR_POOL;
 
   private final List<ClientInterceptor> interceptors = new ArrayList<>();
@@ -114,9 +118,22 @@ public final class ManagedChannelImplBuilder
   // Access via getter, which may perform authority override as needed
   NameResolver.Factory nameResolverFactory = nameResolverRegistry.asFactory();
 
+  /**
+   * server端的地址？.
+   */
   final String target;
+
+  /**
+   * 默认情况下是null.
+   * 这是啥？
+   */
   @Nullable
   final ChannelCredentials channelCredentials;
+
+  /**
+   * 默认情况下是null.
+   * 这是啥？
+   */
   @Nullable
   final CallCredentials callCredentials;
 
@@ -225,10 +242,15 @@ public final class ManagedChannelImplBuilder
    * Creates a new managed channel builder with a target string, which can be either a valid {@link
    * io.grpc.NameResolver}-compliant URI, or an authority string. Transport implementors must
    * provide client transport factory builder, and may set custom channel default port provider.
+   *
+   * <br>
+   * 使用目标字符串创建新的托管通道构建器，该字符串可以是有效的 {@link io.grpc.NameResolver} 兼容URI，也可以是权限字符串。
+   * 传输实施者必须提供客户端传输工厂构建器，并且可以设置自定义通道默认端口提供器。
    */
-  public ManagedChannelImplBuilder(String target,
-      ClientTransportFactoryBuilder clientTransportFactoryBuilder,
-      @Nullable ChannelBuilderDefaultPortProvider channelBuilderDefaultPortProvider) {
+  public ManagedChannelImplBuilder(
+              String target,
+              ClientTransportFactoryBuilder clientTransportFactoryBuilder,
+              @Nullable ChannelBuilderDefaultPortProvider channelBuilderDefaultPortProvider) {
     this(target, null, null, clientTransportFactoryBuilder, channelBuilderDefaultPortProvider);
   }
 
@@ -236,14 +258,20 @@ public final class ManagedChannelImplBuilder
    * Creates a new managed channel builder with a target string, which can be either a valid {@link
    * io.grpc.NameResolver}-compliant URI, or an authority string. Transport implementors must
    * provide client transport factory builder, and may set custom channel default port provider.
+   * <br>
+   * 使用目标字符串创建新的托管通道构建器，该字符串可以是有效的 {@link io.grpc.NameResolver} 兼容URI，也可以是权限字符串。
+   * 传输实施者必须提供客户端传输工厂构建器，并且可以设置自定义通道默认端口提供器。
    *
    * @param channelCreds The ChannelCredentials provided by the user. These may be used when
-   *     creating derivative channels.
+   *     creating derivative channels.  用户提供的ChannelCredentials。这些可以在创建派生通道时使用。
    */
   public ManagedChannelImplBuilder(
-      String target, @Nullable ChannelCredentials channelCreds, @Nullable CallCredentials callCreds,
-      ClientTransportFactoryBuilder clientTransportFactoryBuilder,
-      @Nullable ChannelBuilderDefaultPortProvider channelBuilderDefaultPortProvider) {
+                    String target,
+                    @Nullable ChannelCredentials channelCreds,
+                    @Nullable CallCredentials callCreds,
+                    ClientTransportFactoryBuilder clientTransportFactoryBuilder,
+                    @Nullable ChannelBuilderDefaultPortProvider channelBuilderDefaultPortProvider) {
+
     this.target = Preconditions.checkNotNull(target, "target");
     this.channelCredentials = channelCreds;
     this.callCredentials = callCreds;

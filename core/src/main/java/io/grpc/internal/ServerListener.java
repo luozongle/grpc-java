@@ -18,14 +18,16 @@ package io.grpc.internal;
 
 /**
  * A listener to a server for transport creation events. The listener need not be thread-safe, so
- * notifications must be properly synchronized externally.
+ * notifications must be properly synchronized externally.<br>
+ * 用于传输创建事件的服务器侦听器。侦听器不需要是线程安全的，因此通知必须在外部正确同步。
  */
 public interface ServerListener {
 
   /**
-   * Called upon the establishment of a new client connection.
+   * Called upon the establishment of a new client connection.<br>
+   * 在建立新客户端连接时调用。
    *
-   * @param transport the new transport to be observed.
+   * @param transport the new transport to be observed. 要观察的新运输。
    * @return a listener for stream creation events on the transport.
    */
   ServerTransportListener transportCreated(ServerTransport transport);
@@ -33,7 +35,8 @@ public interface ServerListener {
   /**
    * The server is shutting down. No new transports will be processed, but existing transports may
    * continue. Shutdown is only caused by a call to {@link InternalServer#shutdown()}. All
-   * resources have been released.
+   * resources have been released.<br>
+   * 服务器正在关闭。不会处理新的传输，但现有的传输可能会继续。Shutdown仅由调用 {@link InternalServer#shutdown()} 引起。已释放所有资源
    */
   void serverShutdown();
 }

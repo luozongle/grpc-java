@@ -18,6 +18,9 @@ package io.grpc.internal;
 
 /**
  * An ObjectPool backed by a {@link SharedResourceHolder.Resource}.
+ * <br>
+ * 一个共享的对象池？
+ *
  */
 public final class SharedResourcePool<T> implements ObjectPool<T> {
   private final SharedResourceHolder.Resource<T> resource;

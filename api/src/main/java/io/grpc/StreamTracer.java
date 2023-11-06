@@ -19,15 +19,19 @@ package io.grpc;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Listens to events on a stream to collect metrics.
+ * Listens to events on a stream to collect metrics.<br>
+ * 侦听流上的事件以收集度量。
  *
  * <p>DO NOT MOCK: Use TestStreamTracer. Mocks are not thread-safe
+ *
+ * <p>不要模拟: 使用TestStreamTracer。Mock不是线程安全的
  */
 @ExperimentalApi("https://github.com/grpc/grpc-java/issues/2861")
 @ThreadSafe
 public abstract class StreamTracer {
   /**
-   * Stream is closed.  This will be called exactly once.
+   * Stream is closed.  This will be called exactly once.<br>
+   * 流已关闭。这将被称为一次。
    */
   public void streamClosed(Status status) {
   }

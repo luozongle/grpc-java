@@ -65,8 +65,15 @@ public final class ServerImplBuilder extends ServerBuilder<ServerImplBuilder> {
   }
 
   // defaults
+  /**
+   * 默认的线程池.
+   */
   private static final ObjectPool<? extends Executor> DEFAULT_EXECUTOR_POOL =
       SharedResourcePool.forResource(GrpcUtil.SHARED_CHANNEL_EXECUTOR);
+
+  /**
+   * 默认回退注册表.
+   */
   private static final HandlerRegistry DEFAULT_FALLBACK_REGISTRY = new DefaultFallbackRegistry();
   private static final DecompressorRegistry DEFAULT_DECOMPRESSOR_REGISTRY =
       DecompressorRegistry.getDefaultInstance();
@@ -74,7 +81,8 @@ public final class ServerImplBuilder extends ServerBuilder<ServerImplBuilder> {
       CompressorRegistry.getDefaultInstance();
   private static final long DEFAULT_HANDSHAKE_TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(120);
 
-  // mutable state
+  // mutable state 可变状态
+  // 保存了grpc server的grpc实现类注册表
   final InternalHandlerRegistry.Builder registryBuilder =
       new InternalHandlerRegistry.Builder();
   final List<ServerTransportFilter> transportFilters = new ArrayList<>();
@@ -82,6 +90,10 @@ public final class ServerImplBuilder extends ServerBuilder<ServerImplBuilder> {
   private final List<ServerStreamTracer.Factory> streamTracerFactories = new ArrayList<>();
   private final ClientTransportServersBuilder clientTransportServersBuilder;
   HandlerRegistry fallbackRegistry = DEFAULT_FALLBACK_REGISTRY;
+
+  /**
+   * 貌似是grpc默认的线程池.
+   */
   ObjectPool<? extends Executor> executorPool = DEFAULT_EXECUTOR_POOL;
   DecompressorRegistry decompressorRegistry = DEFAULT_DECOMPRESSOR_REGISTRY;
   CompressorRegistry compressorRegistry = DEFAULT_COMPRESSOR_REGISTRY;
@@ -101,6 +113,8 @@ public final class ServerImplBuilder extends ServerBuilder<ServerImplBuilder> {
   /**
    * An interface to provide to provide transport specific information for the server. This method
    * is meant for Transport implementors and should not be used by normal users.
+   * <br>
+   * 为服务器提供传输特定信息的接口。此方法适用于传输实现者，普通用户不应使用。
    */
   public interface ClientTransportServersBuilder {
     InternalServer buildClientTransportServers(
@@ -240,8 +254,8 @@ public final class ServerImplBuilder extends ServerBuilder<ServerImplBuilder> {
   @Override
   public Server build() {
     return new ServerImpl(this,
-        clientTransportServersBuilder.buildClientTransportServers(getTracerFactories()),
-        Context.ROOT);
+            clientTransportServersBuilder.buildClientTransportServers(getTracerFactories()),
+            Context.ROOT);
   }
 
   @VisibleForTesting

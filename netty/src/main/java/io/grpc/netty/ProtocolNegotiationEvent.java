@@ -28,6 +28,8 @@ import javax.annotation.Nullable;
 
 /**
  * Represents a completion of a protocol negotiation stage.
+ * <br>
+ * 表示协议协商阶段的完成。
  */
 @CheckReturnValue
 @Internal

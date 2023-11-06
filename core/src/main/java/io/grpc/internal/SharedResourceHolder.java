@@ -43,6 +43,7 @@ public final class SharedResourceHolder {
   static final long DESTROY_DELAY_SECONDS = 1;
 
   // The sole holder instance.
+  // 唯一持有者实例。
   private static final SharedResourceHolder holder = new SharedResourceHolder(
       new ScheduledExecutorFactory() {
         @Override
@@ -154,16 +155,19 @@ public final class SharedResourceHolder {
   }
 
   /**
-   * Defines a resource, and the way to create and destroy instances of it.
+   * Defines a resource, and the way to create and destroy instances of it.<br>
+   * 定义资源，以及创建和销毁它的实例的方式。
    */
   public interface Resource<T> {
     /**
-     * Create a new instance of the resource.
+     * Create a new instance of the resource.<br>
+     * 创建资源的新实例。
      */
     T create();
 
     /**
-     * Destroy the given instance.
+     * Destroy the given instance.<br>
+     * 销毁给定的实例。
      */
     void close(T instance);
   }

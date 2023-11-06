@@ -157,11 +157,15 @@ public final class GrpcUtil {
 
   /**
    * The default port for plain-text connections.
+   * <br>
+   * 纯文本连接的默认端口。
    */
   public static final int DEFAULT_PORT_PLAINTEXT = 80;
 
   /**
    * The default port for SSL connections.
+   * <br>
+   * SSL连接的默认端口。
    */
   public static final int DEFAULT_PORT_SSL = 443;
 
@@ -546,6 +550,9 @@ public final class GrpcUtil {
 
   /**
    * Shared executor for channels.
+   * channels的默认共享执行器？
+   * 每次调用都会创建一个cache线程池(会为每个任务创建一个线程)
+   *
    */
   public static final Resource<Executor> SHARED_CHANNEL_EXECUTOR =
       new Resource<Executor>() {

@@ -19,16 +19,19 @@ package io.grpc;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
- * An internal class. Do not use.
+ * An internal class. Do not use.<br>
+ * 一个内部类。不要使用。
  *
  * <p>An interface for types that <b>may</b> support instrumentation. If the actual type does not
  * support instrumentation, then the future will return a {@code null}.
+ * 可能支持检测的类型的接口。如果实际类型不支持检测，则future将返回 {@code null}。
  */
 @Internal
 public interface InternalInstrumented<T> extends InternalWithLogId {
 
   /**
-   * Returns the stats object.
+   * Returns the stats object.<br>
+   * 返回stats对象。
    */
   ListenableFuture<T> getStats();
 }

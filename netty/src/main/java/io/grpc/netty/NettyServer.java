@@ -70,19 +70,37 @@ import java.util.logging.Logger;
 
 /**
  * Netty-based server implementation.
+ * <br>
+ * 基于Netty的服务器实现
  */
 class NettyServer implements InternalServer, InternalWithLogId {
   private static final Logger log = Logger.getLogger(InternalServer.class.getName());
 
   private final InternalLogId logId;
   private final List<? extends SocketAddress> addresses;
+
+  /**
+   * netty 的server channel的类型，比如默认的，或者epool的.
+   */
   private final ChannelFactory<? extends ServerChannel> channelFactory;
+
+  /**
+   * server的channelOptions
+   */
   private final Map<ChannelOption<?>, ?> channelOptions;
+
+  /**
+   * 子channel的options
+   */
   private final Map<ChannelOption<?>, ?> childChannelOptions;
   private final ProtocolNegotiator protocolNegotiator;
   private final int maxStreamsPerConnection;
   private final ObjectPool<? extends EventLoopGroup> bossGroupPool;
   private final ObjectPool<? extends EventLoopGroup> workerGroupPool;
+
+  /**
+   * netty的ByteBuffer分配器，是否强制使用堆内存.
+   */
   private final boolean forceHeapBuffer;
   private EventLoopGroup bossGroup;
   private EventLoopGroup workerGroup;
@@ -201,14 +219,18 @@ class NettyServer implements InternalServer, InternalWithLogId {
   public void start(ServerListener serverListener) throws IOException {
     listener = checkNotNull(serverListener, "serverListener");
 
+    // 准备启动netty
     final ServerBootstrap b = new ServerBootstrap();
+    // ByteBuffer分配器
     b.option(ALLOCATOR, Utils.getByteBufAllocator(forceHeapBuffer));
     b.childOption(ALLOCATOR, Utils.getByteBufAllocator(forceHeapBuffer));
+    // netty的EventLoopGroup
     b.group(bossExecutor, workerGroup);
     b.channelFactory(channelFactory);
     // For non-socket based channel, the option will be ignored.
     b.childOption(SO_KEEPALIVE, true);
 
+    // 分别设置server的options和子channel的options
     if (channelOptions != null) {
       for (Map.Entry<ChannelOption<?>, ?> entry : channelOptions.entrySet()) {
         @SuppressWarnings("unchecked")
@@ -226,6 +248,7 @@ class NettyServer implements InternalServer, InternalWithLogId {
     }
 
     b.childHandler(new ChannelInitializer<Channel>() {
+      // 客户端socket刚连接到服务端的时候，会执行这里
       @Override
       public void initChannel(Channel ch) {
 
@@ -234,6 +257,10 @@ class NettyServer implements InternalServer, InternalWithLogId {
         long maxConnectionAgeInNanos = NettyServer.this.maxConnectionAgeInNanos;
         if (maxConnectionAgeInNanos != MAX_CONNECTION_AGE_NANOS_DISABLED) {
           // apply a random jitter of +/-10% to max connection age
+          // 将 +-10% 的随机抖动应用到最大连接年龄
+          /*
+          这里有意思，0.9 + (0-1随机数) * 0.2，就是差不多+/-10%
+           */
           maxConnectionAgeInNanos =
               (long) ((.9D + Math.random() * .2D) * maxConnectionAgeInNanos);
         }

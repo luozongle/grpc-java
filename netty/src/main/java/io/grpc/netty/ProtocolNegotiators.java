@@ -832,6 +832,9 @@ final class ProtocolNegotiators {
    * Returns a {@link ChannelHandler} that ensures that the {@code handler} is added to the
    * pipeline writes to the {@link io.netty.channel.Channel} may happen immediately, even before it
    * is active.
+   * <br>
+   * 返回 {@link ChannelHandler}，以确保将 {@code handler} 添加到管道中。
+   * 写入 {@link io.netty.channel.Channel} 可能会立即发生，甚至在其处于活动状态之前。
    */
   public static ProtocolNegotiator plaintext() {
     return new PlaintextProtocolNegotiator();
@@ -904,8 +907,15 @@ final class ProtocolNegotiators {
 
   /**
    * Adapts a {@link ProtocolNegotiationEvent} to the {@link GrpcHttp2ConnectionHandler}.
+   * <br>
+   * 将 {@link ProtocolNegotiationEvent} 适配为 {@link GrpcHttp2ConnectionHandler}。
    */
   static final class GrpcNegotiationHandler extends ChannelInboundHandlerAdapter {
+    /**
+     * 会被用来替换handler.
+     * 为什么会可以用来替换？
+     *
+     */
     private final GrpcHttp2ConnectionHandler next;
 
     public GrpcNegotiationHandler(GrpcHttp2ConnectionHandler next) {
@@ -915,7 +925,9 @@ final class ProtocolNegotiators {
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
       if (evt instanceof ProtocolNegotiationEvent) {
+        // 只处理自己的ProtocolNegotiationEvent事件
         ProtocolNegotiationEvent protocolNegotiationEvent = (ProtocolNegotiationEvent) evt;
+        // 替换handler ? 这是干嘛呢
         ctx.pipeline().replace(ctx.name(), null, next);
         next.handleProtocolNegotiationCompleted(
             protocolNegotiationEvent.getAttributes(), protocolNegotiationEvent.getSecurity());
@@ -954,6 +966,8 @@ final class ProtocolNegotiators {
 
   /**
    * A negotiator that only does plain text.
+   * <br>
+   * 只做纯文本的谈判者。
    */
   static final class PlaintextProtocolNegotiator implements ProtocolNegotiator {
 
@@ -978,6 +992,7 @@ final class ProtocolNegotiators {
    * Waits for the channel to be active, and then installs the next Handler.  Using this allows
    * subsequent handlers to assume the channel is active and ready to send.  Additionally, this a
    * {@link ProtocolNegotiationEvent}, with the connection addresses.
+   * 等待通道处于活动状态，然后安装下一个处理程序。使用此功能允许后续处理程序假定通道处于活动状态并准备发送。此外，这是一个具有连接地址的{@link ProtocolNegotiationEvent}.
    */
   static final class WaitUntilActiveHandler extends ProtocolNegotiationHandler {
 
@@ -1021,6 +1036,7 @@ final class ProtocolNegotiators {
   /**
    * ProtocolNegotiationHandler is a convenience handler that makes it easy to follow the rules for
    * protocol negotiation.  Handlers should strongly consider extending this handler.
+   * Protocoltegiationhandler是一个方便的处理程序，它使遵循协议协商的规则变得容易。处理程序应强烈考虑扩展此处理程序。
    */
   static class ProtocolNegotiationHandler extends ChannelDuplexHandler {
 

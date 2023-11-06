@@ -42,7 +42,8 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 
 /**
- * This is an internal API. Do NOT use.
+ * This is an internal API. Do NOT use.<br>
+ * 这是一个内部API。不要使用。
  */
 @Internal
 public final class InternalChannelz {
@@ -56,12 +57,17 @@ public final class InternalChannelz {
   private final ConcurrentMap<Long, InternalInstrumented<ChannelStats>> subchannels
       = new ConcurrentHashMap<>();
   // An InProcessTransport can appear in both otherSockets and perServerSockets simultaneously
+  // Inprocesstranssport可以同时出现在otherSockets和perServerSockets中
   private final ConcurrentMap<Long, InternalInstrumented<SocketStats>> otherSockets
       = new ConcurrentHashMap<>();
+
+  /**
+   * 每个server 对应的socket连接吗.
+   */
   private final ConcurrentMap<Long, ServerSocketMap> perServerSockets
       = new ConcurrentHashMap<>();
 
-  // A convenience class to avoid deeply nested types.
+  // A convenience class to avoid deeply nested types. 一个方便的类，以避免深度嵌套的类型。
   private static final class ServerSocketMap
       extends ConcurrentSkipListMap<Long, InternalInstrumented<SocketStats>> {
     private static final long serialVersionUID = -7883772124944661414L;
@@ -75,7 +81,10 @@ public final class InternalChannelz {
     return INSTANCE;
   }
 
-  /** Adds a server. */
+  /**
+   * Adds a server.
+   * 添加服务器。
+   * */
   public void addServer(InternalInstrumented<ServerStats> server) {
     ServerSocketMap prev = perServerSockets.put(id(server), new ServerSocketMap());
     assert prev == null;
@@ -1098,7 +1107,10 @@ public final class InternalChannelz {
     }
   }
 
-  /** Unwraps a {@link InternalLogId} to return a {@code long}. */
+  /**
+   * Unwraps a {@link InternalLogId} to return a {@code long}.
+   * 解开 {@link InternalLogId} 以返回 {@code long}。
+   * */
   public static long id(InternalWithLogId withLogId) {
     return withLogId.getLogId().getId();
   }

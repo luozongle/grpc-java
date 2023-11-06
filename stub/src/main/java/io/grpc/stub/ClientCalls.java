@@ -126,8 +126,10 @@ public final class ClientCalls {
   /**
    * Executes a unary call and blocks on the response.  The {@code call} should not be already
    * started.  After calling this method, {@code call} should no longer be used.
+   * <br>
+   * 执行一元调用并阻塞响应。{@code call} 不应该已经开始。调用此方法后，不应再使用 {@code call}
    *
-   * @return the single response message.
+   * @return the single response message. 单个响应消息。
    * @throws StatusRuntimeException on error
    */
   public static <ReqT, RespT> RespT blockingUnaryCall(ClientCall<ReqT, RespT> call, ReqT req) {
@@ -143,12 +145,16 @@ public final class ClientCalls {
   /**
    * Executes a unary call and blocks on the response.  The {@code call} should not be already
    * started.  After calling this method, {@code call} should no longer be used.
+   * <br>
+   * 执行一元调用并阻塞响应。{@code call} 不应该已经开始。调用此方法后，不应再使用 {@code call}。
    *
    * @return the single response message.
    * @throws StatusRuntimeException on error
    */
-  public static <ReqT, RespT> RespT blockingUnaryCall(
-      Channel channel, MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, ReqT req) {
+  public static <ReqT, RespT> RespT blockingUnaryCall(Channel channel,
+                                                      MethodDescriptor<ReqT, RespT> method,
+                                                      CallOptions callOptions,
+                                                      ReqT req) {
     ThreadlessExecutor executor = new ThreadlessExecutor();
     boolean interrupt = false;
     ClientCall<ReqT, RespT> call = channel.newCall(method,
@@ -222,11 +228,14 @@ public final class ClientCalls {
    * Executes a unary call and returns a {@link ListenableFuture} to the response.  The
    * {@code call} should not be already started.  After calling this method, {@code call} should no
    * longer be used.
+   * <br>
+   * 执行一元调用，并向响应返回 {@link ListenableFuture}。{@code call} 不应该已经开始。调用此方法后，不应再使用 {@code call}
    *
    * @return a future for the single response message.
    */
   public static <ReqT, RespT> ListenableFuture<RespT> futureUnaryCall(
-      ClientCall<ReqT, RespT> call, ReqT req) {
+                                                ClientCall<ReqT, RespT> call,
+                                                ReqT req) {
     GrpcFuture<RespT> responseFuture = new GrpcFuture<>(call);
     asyncUnaryRequestCall(call, req, new UnaryStreamToFuture<>(responseFuture));
     return responseFuture;
@@ -235,18 +244,26 @@ public final class ClientCalls {
   /**
    * Returns the result of calling {@link Future#get()} interruptibly on a task known not to throw a
    * checked exception.
+   * <br>
+   * 返回对已知不引发检查异常的任务中断调用 {@link Future#get()}的结果。
    *
    * <p>If interrupted, the interrupt is restored before throwing an exception..
+   * <br>
+   * 如果中断，中断将在引发异常之前恢复。
    *
    * @throws java.util.concurrent.CancellationException
    *     if {@code get} throws a {@code CancellationException}.
+   *     如果 {@code get} 抛出一个 {@code CancellationException}。
    * @throws io.grpc.StatusRuntimeException if {@code get} throws an {@link ExecutionException}
    *     or an {@link InterruptedException}.
+   *     如果 {@code get} 抛出一个 {@link ExecutionException} 或一个{@link InterruptedException}。
    */
   private static <V> V getUnchecked(Future<V> future) {
     try {
+      // 从future中获取结果
       return future.get();
     } catch (InterruptedException e) {
+      // 如果发生中断异常，继续中断一下，抛出取消异常
       Thread.currentThread().interrupt();
       throw Status.CANCELLED
           .withDescription("Thread interrupted")
@@ -262,11 +279,17 @@ public final class ClientCalls {
    * embedded {@link StatusException} or {@link StatusRuntimeException}, the returned exception will
    * contain the embedded trailers and status, with the given exception as the cause. Otherwise, an
    * exception will be generated from an {@link Status#UNKNOWN} status.
+   * <br>
+   * 将给定的 {@link Throwable} 包装在 {@link StatusRuntimeException} 中。
+   * 如果它包含嵌入的 {@link StatusException} 或 {@link StatusRuntimeException}，
+   * 则返回的异常将包含嵌入的预告片和状态，并以给定的异常为原因。
+   * 否则，将从 {@link Status#UNKNOWN} 状态生成异常。
    */
   private static StatusRuntimeException toStatusRuntimeException(Throwable t) {
     Throwable cause = checkNotNull(t, "t");
     while (cause != null) {
       // If we have an embedded status, use it and replace the cause
+      // 如果我们具有嵌入式状态，请使用它并替换原因
       if (cause instanceof StatusException) {
         StatusException se = (StatusException) cause;
         return new StatusRuntimeException(se.getStatus(), se.getTrailers());
@@ -312,10 +335,18 @@ public final class ClientCalls {
             new CallToStreamObserverAdapter<>(call, streamingResponse)));
   }
 
+  /**
+   * 异步一元请求？.
+   * @param call 啥子
+   * @param req 请求参数
+   * @param responseListener 响应监听？ 看看具体怎么做的
+   * @param <ReqT> 啥子
+   * @param <RespT> 啥子
+   */
   private static <ReqT, RespT> void asyncUnaryRequestCall(
-      ClientCall<ReqT, RespT> call,
-      ReqT req,
-      StartableListener<RespT> responseListener) {
+                        ClientCall<ReqT, RespT> call,
+                        ReqT req,
+                        StartableListener<RespT> responseListener) {
     startCall(call, responseListener);
     try {
       call.sendMessage(req);
@@ -340,8 +371,8 @@ public final class ClientCalls {
   }
 
   private static <ReqT, RespT> void startCall(
-      ClientCall<ReqT, RespT> call,
-      StartableListener<RespT> responseListener) {
+                    ClientCall<ReqT, RespT> call,
+                    StartableListener<RespT> responseListener) {
     call.start(responseListener, new Metadata());
     responseListener.onStart();
   }
@@ -512,7 +543,15 @@ public final class ClientCalls {
    */
   private static final class UnaryStreamToFuture<RespT> extends StartableListener<RespT> {
     private final GrpcFuture<RespT> responseFuture;
+
+    /**
+     * 响应值内容.
+     */
     private RespT value;
+
+    /**
+     * 是否收到值.
+     */
     private boolean isValueReceived = false;
 
     // Non private to avoid synthetic class
@@ -526,6 +565,7 @@ public final class ClientCalls {
 
     @Override
     public void onMessage(RespT value) {
+      // 收到响应消息，判断一下 不能重复接受
       if (this.isValueReceived) {
         throw Status.INTERNAL.withDescription("More than one value received for unary call")
             .asRuntimeException();
@@ -556,23 +596,39 @@ public final class ClientCalls {
   }
 
   private static final class GrpcFuture<RespT> extends AbstractFuture<RespT> {
+
+    /**
+     * 具体要做的事情？.
+     */
     private final ClientCall<?, RespT> call;
 
     // Non private to avoid synthetic class
+    // 避免合成类的非私有
     GrpcFuture(ClientCall<?, RespT> call) {
       this.call = call;
     }
 
+    /**
+     * 中断任务.
+     */
     @Override
     protected void interruptTask() {
       call.cancel("GrpcFuture was cancelled", null);
     }
 
+    /**
+     * 设置当前的任务？.
+     */
     @Override
     protected boolean set(@Nullable RespT resp) {
       return super.set(resp);
     }
 
+    /**
+     * 设置异常结果 .
+     * @param throwable the exception to be used as the failed result
+     * @return true?
+     */
     @Override
     protected boolean setException(Throwable throwable) {
       return super.setException(throwable);

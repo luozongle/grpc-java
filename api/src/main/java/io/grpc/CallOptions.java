@@ -32,6 +32,7 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * The collection of runtime options for a new RPC call.
+ * 新RPC调用的运行时选项集合
  *
  * <p>A field that is not set is {@code null}.
  */
@@ -53,6 +54,10 @@ public final class CallOptions {
   @Nullable
   private final Deadline deadline;
 
+  /**
+   * 这是干嘛的.
+   * 调用接口的时候的时候new出来的
+   */
   @Nullable
   private final Executor executor;
 

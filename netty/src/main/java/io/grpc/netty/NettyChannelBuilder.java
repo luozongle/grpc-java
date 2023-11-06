@@ -106,7 +106,11 @@ public final class NettyChannelBuilder extends
   private long keepAliveTimeoutNanos = DEFAULT_KEEPALIVE_TIMEOUT_NANOS;
   private boolean keepAliveWithoutCalls;
   private ProtocolNegotiator.ClientFactory protocolNegotiatorFactory
-      = new DefaultProtocolNegotiator();
+          = new DefaultProtocolNegotiator();
+
+  /**
+   * 这是啥呢？.
+   */
   private final boolean freezeProtocolNegotiatorFactory;
   private LocalSocketPicker localSocketPicker;
 
@@ -559,11 +563,14 @@ public final class NettyChannelBuilder extends
     return protocolNegotiatorFactory.getDefaultPort();
   }
 
+  /**
+   * 根据类型创建协议谈判者？.
+   */
   @VisibleForTesting
   static ProtocolNegotiator createProtocolNegotiatorByType(
-      NegotiationType negotiationType,
-      SslContext sslContext,
-      ObjectPool<? extends Executor> executorPool) {
+                              NegotiationType negotiationType,
+                              SslContext sslContext,
+                              ObjectPool<? extends Executor> executorPool) {
     switch (negotiationType) {
       case PLAINTEXT:
         return ProtocolNegotiators.plaintext();
@@ -626,7 +633,14 @@ public final class NettyChannelBuilder extends
     return this;
   }
 
+  /**
+   * 默认协议谈判者？.
+   */
   private final class DefaultProtocolNegotiator implements ProtocolNegotiator.ClientFactory {
+
+    /**
+     * 协商者类似？.
+     */
     private NegotiationType negotiationType = NegotiationType.TLS;
     private SslContext sslContext;
 
@@ -635,6 +649,7 @@ public final class NettyChannelBuilder extends
       SslContext localSslContext = sslContext;
       if (negotiationType == NegotiationType.TLS && localSslContext == null) {
         try {
+          // 如果协商类型是tls，但是没有sslContext那就自己构建一个？
           localSslContext = GrpcSslContexts.forClient().build();
         } catch (SSLException ex) {
           throw new RuntimeException(ex);

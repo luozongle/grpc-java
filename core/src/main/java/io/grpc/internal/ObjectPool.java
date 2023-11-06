@@ -20,6 +20,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * An object pool.
+ * 对象池。
  */
 @ThreadSafe
 public interface ObjectPool<T> {

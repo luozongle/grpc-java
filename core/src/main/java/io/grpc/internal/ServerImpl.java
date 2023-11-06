@@ -79,8 +79,10 @@ import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Default implementation of {@link io.grpc.Server}, for creation by transports.
+ * {@link io.grpc.Server} 的默认实现，用于通过传输创建。
  *
  * <p>Expected usage (by a theoretical TCP transport):
+ * 预期使用情况 (通过理论上的TCP传输):
  * <pre><code>public class TcpTransportServerFactory {
  *   public static Server newServer(Executor executor, HandlerRegistry registry,
  *       String configuration) {
@@ -90,14 +92,26 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * <p>Starting the server starts the underlying transport for servicing requests. Stopping the
  * server stops servicing new requests and waits for all connections to terminate.
+ *
+ * <p>启动服务器启动服务请求的基础传输。停止服务器停止服务新请求，并等待所有连接终止。
  */
 public final class ServerImpl extends io.grpc.Server implements InternalInstrumented<ServerStats> {
   private static final Logger log = Logger.getLogger(ServerImpl.class.getName());
   private static final ServerStreamListener NOOP_LISTENER = new NoopListener();
 
   private final InternalLogId logId;
+
+  /**
+   * 线程池pool.
+   * @see #executor
+   */
   private final ObjectPool<? extends Executor> executorPool;
-  /** Executor for application processing. Safe to read after {@link #start()}. */
+  /**
+   * Executor for application processing. Safe to read after {@link #start()}. <br>
+   * 应用程序处理的执行程序。在 {@link #start()} 之后可以安全读取。
+   *
+   * @see #executorPool 从这里读取的
+   * */
   private Executor executor;
   private final HandlerRegistry registry;
   private final HandlerRegistry fallbackRegistry;
@@ -113,11 +127,19 @@ public final class ServerImpl extends io.grpc.Server implements InternalInstrume
   /** {@code true} if ServerListenerImpl.serverShutdown() was called. */
   @GuardedBy("lock") private boolean serverShutdownCallbackInvoked;
   @GuardedBy("lock") private boolean terminated;
-  /** Service encapsulating something similar to an accept() socket. */
+
+  /**
+   * Service encapsulating something similar to an accept() socket.
+   * 服务封装了类似于accept() 套接字的东西。
+   * ? 啥东西
+   * */
   private final InternalServer transportServer;
   private final Object lock = new Object();
   @GuardedBy("lock") private boolean transportServersTerminated;
-  /** {@code transportServer} and services encapsulating something similar to a TCP connection. */
+  /**
+   * {@code transportServer} and services encapsulating something similar to a TCP connection. <br>
+   * {@code transportServer} 和封装类似于TCP连接的服务。
+   * */
   @GuardedBy("lock") private final Set<ServerTransport> transports = new HashSet<>();
 
   private final Context rootContext;
@@ -132,11 +154,12 @@ public final class ServerImpl extends io.grpc.Server implements InternalInstrume
   private final ServerCallExecutorSupplier executorSupplier;
 
   /**
-   * Construct a server.
+   * Construct a server.<br>
+   * 构造一个服务器。
    *
-   * @param builder builder with configuration for server
-   * @param transportServer transport servers that will create new incoming transports
-   * @param rootContext context that callbacks for new RPCs should be derived from
+   * @param builder builder with configuration for server 具有服务器配置的生成器
+   * @param transportServer transport servers that will create new incoming transports将创建新传入传输的传输服务器
+   * @param rootContext context that callbacks for new RPCs should be derived from   新rpc的回调应派生自的上下文
    */
   ServerImpl(
       ServerImplBuilder builder,
@@ -169,10 +192,12 @@ public final class ServerImpl extends io.grpc.Server implements InternalInstrume
 
   /**
    * Bind and start the server.
+   * <br>
+   * 绑定并启动服务器
    *
    * @return {@code this} object
-   * @throws IllegalStateException if already started
-   * @throws IOException if unable to bind
+   * @throws IllegalStateException if already started 如果已经启动
+   * @throws IOException if unable to bind 如果无法绑定
    */
   @Override
   public ServerImpl start() throws IOException {
@@ -407,7 +432,15 @@ public final class ServerImpl extends io.grpc.Server implements InternalInstrume
 
   private final class ServerTransportListenerImpl implements ServerTransportListener {
     private final ServerTransport transport;
+
+    /**
+     * 握手超时未来.
+     */
     private Future<?> handshakeTimeoutFuture;
+
+    /**
+     * 属性.
+     */
     private Attributes attributes;
 
     ServerTransportListenerImpl(ServerTransport transport) {

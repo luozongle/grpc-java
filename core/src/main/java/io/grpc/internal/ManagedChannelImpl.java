@@ -161,6 +161,10 @@ final class ManagedChannelImpl extends ManagedChannel implements
   private final NameResolverRegistry nameResolverRegistry;
   private final NameResolver.Factory nameResolverFactory;
   private final NameResolver.Args nameResolverArgs;
+
+  /**
+   * 负载均衡.
+   */
   private final AutoConfiguredLoadBalancerFactory loadBalancerFactory;
   private final ClientTransportFactory originalTransportFactory;
   @Nullable
@@ -168,7 +172,15 @@ final class ManagedChannelImpl extends ManagedChannel implements
   private final ClientTransportFactory transportFactory;
   private final ClientTransportFactory oobTransportFactory;
   private final RestrictedScheduledExecutor scheduledExecutor;
+
+  /**
+   * {@link #executorPool}里拿出来的，是干嘛的.
+   */
   private final Executor executor;
+
+  /**
+   * 这个线程池是干嘛的.
+   */
   private final ObjectPool<? extends Executor> executorPool;
   private final ObjectPool<? extends Executor> balancerRpcExecutorPool;
   private final ExecutorHolder balancerRpcExecutorHolder;

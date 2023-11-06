@@ -21,6 +21,8 @@ import io.grpc.Status;
 /**
  * A command to trigger close and close all streams. It is buffered differently than normal close
  * and also includes reason for closure.
+ * <br>
+ * 触发关闭和关闭所有流的命令。它的缓冲方式不同于正常关闭，并且还包括关闭的原因。
  */
 class ForcefulCloseCommand extends WriteQueue.AbstractQueuedCommand {
   private final Status status;

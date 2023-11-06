@@ -39,6 +39,7 @@ public abstract class ServerProvider {
    * @throws ProviderNotFoundException if no provider is available
    */
   public static ServerProvider provider() {
+    // 默认provider?
     ServerProvider provider = ServerRegistry.getDefaultRegistry().provider();
     if (provider == null) {
       throw new ProviderNotFoundException("No functional server found. "

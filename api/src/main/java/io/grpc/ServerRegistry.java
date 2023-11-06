@@ -39,7 +39,11 @@ public final class ServerRegistry {
 
   @GuardedBy("this")
   private final LinkedHashSet<ServerProvider> allProviders = new LinkedHashSet<>();
-  /** Immutable, sorted version of {@code allProviders}. Is replaced instead of mutating. */
+  /**
+   * Immutable, sorted version of {@code allProviders}. Is replaced instead of mutating.
+   * <br>
+   * allProviders的不可变排序版本。被替换而不是变异。
+   * */
   @GuardedBy("this")
   private List<ServerProvider> effectiveProviders = Collections.emptyList();
 
@@ -87,6 +91,7 @@ public final class ServerRegistry {
 
   /**
    * Returns the default registry that loads providers via the Java service loader mechanism.
+   * 返回通过Java服务加载机制加载提供程序的默认注册表。
    */
   public static synchronized ServerRegistry getDefaultRegistry() {
     if (instance == null) {

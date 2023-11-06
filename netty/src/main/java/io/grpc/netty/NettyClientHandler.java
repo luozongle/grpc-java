@@ -89,6 +89,8 @@ import javax.annotation.Nullable;
 /**
  * Client-side Netty handler for GRPC processing. All event handlers are executed entirely within
  * the context of the Netty Channel thread.
+ * <br>
+ * 用于GRPC处理的客户端Netty处理程序所有事件处理程序都完全在Netty通道线程的上下文中执行。
  */
 class NettyClientHandler extends AbstractNettyHandler {
   private static final Logger logger = Logger.getLogger(NettyClientHandler.class.getName());
@@ -96,11 +98,15 @@ class NettyClientHandler extends AbstractNettyHandler {
   /**
    * A message that simply passes through the channel without any real processing. It is useful to
    * check if buffers have been drained and test the health of the channel in a single operation.
+   * <br>
+   * 简单地通过通道而没有任何实际处理的消息。检查缓冲区是否已耗尽并在单个操作中测试通道的运行状况很有用。
    */
   static final Object NOOP_MESSAGE = new Object();
 
   /**
    * Status used when the transport has exhausted the number of streams.
+   * <br>
+   * 传输耗尽流数时使用的状态。
    */
   private static final Status EXHAUSTED_STREAMS_STATUS =
           Status.UNAVAILABLE.withDescription("Stream IDs have been exhausted");

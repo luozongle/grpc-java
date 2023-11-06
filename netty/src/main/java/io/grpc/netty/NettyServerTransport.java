@@ -47,9 +47,12 @@ import java.util.logging.Logger;
 
 /**
  * The Netty-based server transport.
+ * <br>
+ * 基于Netty的服务器传输
  */
 class NettyServerTransport implements ServerTransport {
   // connectionLog is for connection related messages only
+  // connectionLog仅用于连接相关消息
   private static final Logger connectionLog = Logger.getLogger(
       String.format("%s.connections", NettyServerTransport.class.getName()));
 

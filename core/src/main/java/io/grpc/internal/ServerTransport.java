@@ -21,27 +21,35 @@ import io.grpc.InternalInstrumented;
 import io.grpc.Status;
 import java.util.concurrent.ScheduledExecutorService;
 
-/** An inbound connection. */
+/**
+ * An inbound connection.
+ * 入站连接
+ * */
 public interface ServerTransport extends InternalInstrumented<SocketStats> {
   /**
    * Initiates an orderly shutdown of the transport. Existing streams continue, but new streams will
    * eventually begin failing. New streams "eventually" begin failing because shutdown may need to
-   * be processed on a separate thread. May only be called once.
+   * be processed on a separate thread. May only be called once.<br>
+   * 启动传输的有序关闭。现有的流继续，但新的流最终将开始失败。新的流 “最终” 开始失败，因为关闭可能需要在单独的线程上处理。只能调用一次。
    */
   void shutdown();
 
   /**
    * Initiates a forceful shutdown in which preexisting and new calls are closed. Existing calls
-   * should be closed with the provided {@code reason}.
+   * should be closed with the provided {@code reason}.<br>
+   * 启动强制关闭，关闭先前存在的和新的呼叫。应使用提供的 {@code reason} 关闭现有调用。
    */
   void shutdownNow(Status reason);
 
   /**
    * Returns an executor for scheduling provided by the transport. The service should be configured
-   * to allow cancelled scheduled runnables to be GCed.
+   * to allow cancelled scheduled runnables to be GCed.<br>
+   * 返回由传输提供的调度执行器。该服务应配置为允许取消计划的可运行对象GCed。
    *
    * <p>The executor may not be used after the transport terminates. The caller should ensure any
    * outstanding tasks are cancelled when the transport terminates.
+   *
+   * <p>运输终止后，不得使用执行器。呼叫者应确保在传输终止时取消任何未完成的任务。
    */
   ScheduledExecutorService getScheduledExecutorService();
 }

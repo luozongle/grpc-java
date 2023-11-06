@@ -61,6 +61,7 @@ public abstract class AbstractServerImplBuilder
 
   /**
    * Returns the delegated {@code ServerBuilder}.
+   * 返回委托的 {@code ServerBuilder}。
    */
   protected abstract ServerBuilder<?> delegate();
 

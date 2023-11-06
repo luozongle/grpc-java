@@ -86,7 +86,14 @@ public final class NettyServerBuilder extends AbstractServerImplBuilder<NettySer
   private static final ObjectPool<? extends EventLoopGroup> DEFAULT_WORKER_EVENT_LOOP_GROUP_POOL =
       SharedResourcePool.forResource(Utils.DEFAULT_WORKER_EVENT_LOOP_GROUP);
 
+  /**
+   * 貌似放了一些server 处理程序.
+   */
   private final ServerImplBuilder serverImplBuilder;
+
+  /**
+   * 监听地址.
+   */
   private final List<SocketAddress> listenAddresses = new ArrayList<>();
 
   private TransportTracer.Factory transportTracerFactory = TransportTracer.getDefaultFactory();

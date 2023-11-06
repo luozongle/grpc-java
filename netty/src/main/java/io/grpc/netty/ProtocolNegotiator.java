@@ -23,11 +23,15 @@ import java.util.concurrent.Executor;
 
 /**
  * An class that provides a Netty handler to control protocol negotiation.
+ * <br>
+ * 提供Netty处理程序来控制协议协商的类。
  */
 interface ProtocolNegotiator {
 
   /**
    * The HTTP/2 scheme to be used when sending {@code HEADERS}.
+   * <br>
+   * 发送 {@code HEADERS} 时要使用的HTTP2方案。
    */
   AsciiString scheme();
 
@@ -36,6 +40,9 @@ interface ProtocolNegotiator {
    * successfully, the provided handler is installed. Must call {@code
    * grpcHandler.onHandleProtocolNegotiationCompleted()} at certain point if the negotiation has
    * completed successfully.
+   * <br>
+   * 创建一个新的处理程序来控制协议协商。协商成功完成后，将安装提供的处理程序。
+   * 如果协商已成功完成，则必须在某些时候调用 {@code grpcHandler.onHandleProtocolNegotiationCompleted()}。
    */
   ChannelHandler newHandler(GrpcHttp2ConnectionHandler grpcHandler);
 
@@ -44,20 +51,32 @@ interface ProtocolNegotiator {
    * or when InternalServer is shutdown (depending on client or server). That means handlers
    * returned by {@link #newHandler} can outlive their parent negotiator on server-side, but not
    * on client-side.
+   * <br>
+   * 释放这位谈判者持有的资源。当通道过渡到终止或InternalServer关闭时 (取决于客户端或服务器) 调用。
+   * 这意味着 {@link #newHandler} 返回的处理程序在服务器端可以超过其父谈判者，但在客户端则不能。
    */
   void close();
 
   interface ClientFactory {
-    /** Creates a new negotiator. */
+    /**
+     * Creates a new negotiator.
+     * 创建一个新的谈判者。??
+     * 谈判者是什么？
+     * */
     ProtocolNegotiator newNegotiator();
 
-    /** Returns the implicit port to use if no port was specified explicitly by the user. */
+    /**
+     * Returns the implicit port to use if no port was specified explicitly by the user.
+     * 如果用户未显式指定任何端口，则返回要使用的隐式端口。
+     * */
     int getDefaultPort();
   }
 
   interface ServerFactory {
     /**
      * Creates a new negotiator.
+     * <br>
+     * 创建一个新的谈判者。
      *
      * @param offloadExecutorPool an executor pool for time-consuming tasks
      */

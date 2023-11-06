@@ -56,6 +56,8 @@ final class InternalHandlerRegistry extends HandlerRegistry {
   static final class Builder {
 
     // Store per-service first, to make sure services are added/replaced atomically.
+    // 首先存储每个服务，以确保服务被原子地放置。
+    // 保存了grpc的实现类build出来的东西
     private final HashMap<String, ServerServiceDefinition> services =
         new LinkedHashMap<>();
 

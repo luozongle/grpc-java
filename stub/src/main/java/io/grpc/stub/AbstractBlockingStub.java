@@ -41,7 +41,7 @@ public abstract class AbstractBlockingStub<S extends AbstractBlockingStub<S>>
 
   /**
    * Returns a new blocking stub with the given channel for the provided method configurations.
-   *
+   * <br>
    * @since 1.26.0
    * @param factory the factory to create a blocking stub
    * @param channel the channel that this stub will use to do communications
@@ -60,7 +60,9 @@ public abstract class AbstractBlockingStub<S extends AbstractBlockingStub<S>>
    * @param callOptions the runtime call options to be applied to every call on this stub
    */
   public static <T extends AbstractStub<T>> T newStub(
-      StubFactory<T> factory, Channel channel, CallOptions callOptions) {
+                                          StubFactory<T> factory,
+                                          Channel channel,
+                                          CallOptions callOptions) {
     T stub = factory.newStub(
         channel, callOptions.withOption(ClientCalls.STUB_TYPE_OPTION, StubType.BLOCKING));
     assert stub instanceof AbstractBlockingStub

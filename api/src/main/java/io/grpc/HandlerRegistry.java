@@ -22,14 +22,16 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Registry of services and their methods used by servers to dispatching incoming calls.
+ * Registry of services and their methods used by servers to dispatching incoming calls.<br>
+ * 服务器用于调度传入呼叫的服务及其方法的注册表。
  */
 @ThreadSafe
 public abstract class HandlerRegistry {
 
   /**
    * Returns the {@link ServerServiceDefinition}s provided by the registry, or an empty list if not
-   * supported by the implementation.
+   * supported by the implementation.<br>
+   * 返回注册表提供的 {@link ServerServiceDefinition}，如果实现不支持，则返回空列表。
    */
   @ExperimentalApi("https://github.com/grpc/grpc-java/issues/2222")
   public List<ServerServiceDefinition> getServices() {
@@ -37,22 +39,28 @@ public abstract class HandlerRegistry {
   }
 
   /**
-   * Lookup a {@link ServerMethodDefinition} by its fully-qualified name.
+   * Lookup a {@link ServerMethodDefinition} by its fully-qualified name.<br>
+   * 通过完全限定名称查找 {@link ServerMethodDefinition}。
    *
-   * @param methodName to lookup {@link ServerMethodDefinition} for.
+   * @param methodName to lookup {@link ServerMethodDefinition}for.
+   *                   要查找的{@link ServerMethodDefinition}。
    * @param authority the authority for the desired method (to do virtual hosting). If {@code null}
-   *        the first matching method will be returned.
+   *        the first matching method will be returned. 所需方法的权限 (进行虚拟托管)。如果 {@code null} 将返回第一个匹配方法。
    * @return the resolved method or {@code null} if no method for that name exists.
+   *     解析的方法或 {@code null} (如果不存在该名称的方法)。
    */
   @Nullable
   public abstract ServerMethodDefinition<?, ?> lookupMethod(
       String methodName, @Nullable String authority);
 
   /**
-   * Lookup a {@link ServerMethodDefinition} by its fully-qualified name.
+   * Lookup a {@link ServerMethodDefinition} by its fully-qualified name.<br>
+   * 通过完全限定名称查找 {@link ServerMethodDefinition}。
    *
    * @param methodName to lookup {@link ServerMethodDefinition} for.
+   *                   要查找的 {@link ServerMethodDefinition}。
    * @return the resolved method or {@code null} if no method for that name exists.
+   *     解析的方法或 {@code null} (如果不存在该名称的方法)。
    */
   @Nullable
   public final ServerMethodDefinition<?, ?> lookupMethod(String methodName) {
